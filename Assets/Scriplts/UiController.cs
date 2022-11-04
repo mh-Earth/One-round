@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
-using System.Collections;
+using UnityEngine.SceneManagement;
 // using UnityEngine.Rendering.
 public class UiController : MonoBehaviour
 
@@ -29,6 +30,7 @@ public class UiController : MonoBehaviour
     [SerializeField]
     private GameObject TouchParticleObject;
     private MainMenuTouchEffect mainMenuTouch;
+    private Animator OpenningAnimation;
 
     /////////////////////////////
     private bool isFirst = true;
@@ -68,11 +70,7 @@ public class UiController : MonoBehaviour
         playerSpawner = playerSpawner.GetComponent<PlayerSpawner>();
         // StarScrollingParticleEffect.Pause();
         toggleTouchEffect(); //on
-
-
-
-
-
+        OpenningAnimation = GameObject.FindGameObjectWithTag("Opening").GetComponent<Animator>();
 
     }
 
@@ -112,7 +110,6 @@ public class UiController : MonoBehaviour
         GameoverAnimator.SetBool("closing", false);
 
         yield return new WaitForSeconds(.5f);
-        toggleTouchEffect(); // on
         changingCameraCullingMask();
 
 
@@ -130,9 +127,17 @@ public class UiController : MonoBehaviour
 
     }
 
-    public void exit()
-    {
+    IEnumerator loadExit(){
+        OpenningAnimation.SetBool(TagManager.opening_animation_tag,false);
+        yield return new WaitForSeconds(.9f);
+        print("exit");
         Application.Quit();
+    }
+
+    public void exit()
+    {   
+
+        StartCoroutine(loadExit());
 
     }
 
@@ -143,7 +148,6 @@ public class UiController : MonoBehaviour
         {
 
 
-            toggleTouchEffect(); // off
             GameoverAnimator.SetBool("opening", false);
             GameoverAnimator.SetBool("closing", true);
             playerSpawner.spanwPlayer();
@@ -207,6 +211,23 @@ public class UiController : MonoBehaviour
         yield return new WaitForSeconds(.65f);
         GameoverAnimator.SetBool("opening", false);
         GameoverAnimator.SetBool("closing", true);
+        toggleTouchEffect(); //On
+    }
+
+    IEnumerator AboutSceneLoad(){
+        OpenningAnimation.SetBool(TagManager.opening_animation_tag,false);
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadScene("About");
+
+
+
+    }
+
+    IEnumerator SettingSceneLoad(){
+
+        OpenningAnimation.SetBool(TagManager.opening_animation_tag,false);
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("Settings");
     }
 
     public void MainMenu()
@@ -214,6 +235,19 @@ public class UiController : MonoBehaviour
         StartCoroutine(MainMenuAnimation());
     }
 
+
+    public void about(){
+
+        StartCoroutine(AboutSceneLoad());
+
+
+    }
+
+    public void Setting(){
+
+        StartCoroutine(SettingSceneLoad());
+
+    }
 
 
 

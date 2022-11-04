@@ -33,8 +33,11 @@ public class PlayerController : MonoBehaviour
     private ParticleSystem PlayerSpawnerParticals;
     [SerializeField]
     private Vector3 playerSpawnSize;
-
     private UiController uiController;
+    /////////////////////////
+    // PlayerController settings
+    private bool isVibrate;
+
 
 
     public delegate void gameOver();
@@ -68,8 +71,19 @@ public class PlayerController : MonoBehaviour
 
 
     }
+
+
+    void fetchSettings(){
+        isVibrate =  (PlayerPrefs.GetInt("isVibrateOn", 1) != 0);
+    }
+        
+
+
+
+
     void Start()
-    {
+    {   
+        fetchSettings();
         StartCoroutine(spawningPlayer());
         playerSpeed = 90f;
     }
@@ -140,6 +154,12 @@ public class PlayerController : MonoBehaviour
         playerSprite.sprite = null;
 
         destroyParticals.Play();
+
+        // Effected by player settings
+        if(isVibrate){
+            Handheld.Vibrate();
+        }
+
         Destroy(this.gameObject, 2f);
 
 

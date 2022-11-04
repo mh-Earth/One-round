@@ -8,6 +8,7 @@ TagManager:
   - Black Hole
   - Ul Camera
   - TouchEffect
+  - Opening
   layers:
   - Default
   - TransparentFX

@@ -62,7 +62,7 @@ public class BackgroundStarEffectManeger : MonoBehaviour
         main.startColor = colorList[index];
         scoreColorBrake = 10;
 
-    }
+    } 
 
 
 

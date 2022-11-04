@@ -14,6 +14,7 @@ public class RingsParticleController : MonoBehaviour
      RingsParticleSystem = this.GetComponent<ParticleSystem>();
      RingsParticleSystem.Play();   
 
+  
 
     }
 
