@@ -9,4 +9,7 @@ public class TagManager
     public static int About_Scene_Index = 1;
     public static string opening_animation_tag = "Open";
 
+    public static string GameStartTransition = "GameStart";
+
+
 }

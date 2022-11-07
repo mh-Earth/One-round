@@ -9,7 +9,7 @@ public class BackgroundStarEffectManeger : MonoBehaviour
     [SerializeField]
     private Color[] colorList;
     private int index = 0;
-    private float scoreColorBrake = 10f;
+    private float scoreColorBrake = 100f;
 
 
     private void OnEnable() {
@@ -47,7 +47,7 @@ public class BackgroundStarEffectManeger : MonoBehaviour
 
             var main = scrollingStar.main;
             main.startColor = colorList[index];
-            scoreColorBrake += 10;
+            scoreColorBrake += 100;
             index++;
 
         }
@@ -60,7 +60,7 @@ public class BackgroundStarEffectManeger : MonoBehaviour
         index = 0;
         var main = scrollingStar.main;
         main.startColor = colorList[index];
-        scoreColorBrake = 10;
+        scoreColorBrake = 100;
 
     } 
 

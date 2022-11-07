@@ -19,9 +19,9 @@ public class Settings : MonoBehaviour
     [SerializeField]
     private Toggle Vibrate;
     [SerializeField]
-    private Toggle colorChange;
-    [SerializeField]
     private Toggle Bloom;
+    [SerializeField]
+    private Toggle FPS;
     [Header("Animations")]
     private Animator animator;
     [SerializeField]
@@ -49,12 +49,11 @@ public class Settings : MonoBehaviour
         Bloom.isOn = (PlayerPrefs.GetInt("isBloomOn", 1) != 0);
         minimap.isOn = (PlayerPrefs.GetInt("isMinimapOn", 1) != 0);
         Vibrate.isOn = (PlayerPrefs.GetInt("isVibrateOn", 1) != 0);
-        colorChange.isOn = (PlayerPrefs.GetInt("isColorChanging", 1) != 0);
+        FPS.isOn = (PlayerPrefs.GetInt("isFpsOn", 0) != 0);
 
 
         MusicValue.onValueChanged.AddListener(delegate { MusicSliderValueChanged(); });
         SoundValue.onValueChanged.AddListener(delegate { SoundSliderValueChanged(); });
-        // MusicValue.on
 
         // sliderValueChanged();
     }
@@ -68,8 +67,8 @@ public class Settings : MonoBehaviour
         PlayerPrefs.SetFloat("sound", SoundValue.value);
         PlayerPrefs.SetInt("isBloomOn", (Bloom.isOn ? 1 : 0));
         PlayerPrefs.SetInt("isVibrateOn", (Vibrate.isOn ? 1 : 0));
-        PlayerPrefs.SetInt("isColorChanging", (colorChange.isOn ? 1 : 0));
         PlayerPrefs.SetInt("isMinimapOn", (minimap.isOn ? 1 : 0));
+        PlayerPrefs.SetInt("isFpsOn", (FPS.isOn ? 1 : 0));
 
         ArrowAnimator.SetBool("Swap",true);
         animator.SetBool(TagManager.opening_animation_tag, false);
@@ -92,7 +91,7 @@ public class Settings : MonoBehaviour
         Bloom.isOn = PlayerPrefs.GetInt("isBloomOn", 1) != 0;
         minimap.isOn = PlayerPrefs.GetInt("isMinimapOn", 1) != 0;
         Vibrate.isOn = PlayerPrefs.GetInt("isVibrateOn", 1) != 0;
-        colorChange.isOn = PlayerPrefs.GetInt("isColorChanging", 1) != 0;
+        FPS.isOn = PlayerPrefs.GetInt("isFpsOn", 0) != 0;
 
 
     }

@@ -18,8 +18,8 @@ public class PlayerSpawner : MonoBehaviour
         GameObject NewBlackHole =  Instantiate(BackHole,Vector3.zero,Quaternion.identity);
 
         GameObject player = Instantiate(playerPrefab,transform.position,Quaternion.identity);
-        float rotateAngel = Random.Range(-180f,180f);
-        playerPrefab.transform.RotateAround(NewBlackHole.transform.position,Vector3.back,rotateAngel);
+        // float rotateAngel = Random.Range(-360f,360f);
+        // playerPrefab.transform.RotateAround(NewBlackHole.transform.position,Vector3.back,rotateAngel);
 
     }
 

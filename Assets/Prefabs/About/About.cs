@@ -16,7 +16,7 @@ public class About : MonoBehaviour
     IEnumerator loadHome(){
 
         OpeningAnimator.SetBool("Open",false);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.8f);
         SceneManager.LoadScene(0);
         yield return null;
 

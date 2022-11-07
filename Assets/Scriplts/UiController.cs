@@ -12,7 +12,7 @@ public class UiController : MonoBehaviour
 
     [Header("Main Menu")]
     [SerializeField]
-    private Animator animator;
+    private Animator MainMenuAnimator;
 
     [Header("Game Over Menu")]
     [SerializeField]
@@ -31,6 +31,8 @@ public class UiController : MonoBehaviour
     private GameObject TouchParticleObject;
     private MainMenuTouchEffect mainMenuTouch;
     private Animator OpenningAnimation;
+    [SerializeField]
+    private Animator GameStartTransition;
 
     /////////////////////////////
     private bool isFirst = true;
@@ -54,6 +56,7 @@ public class UiController : MonoBehaviour
     }
 
     public delegate void isGameStarted();
+    // Clint:ringController
     public static isGameStarted gameStarted;
 
     private void Awake()
@@ -69,13 +72,28 @@ public class UiController : MonoBehaviour
         mainMenuTouch = TouchParticleObject.GetComponent<MainMenuTouchEffect>();
         playerSpawner = playerSpawner.GetComponent<PlayerSpawner>();
         // StarScrollingParticleEffect.Pause();
-        toggleTouchEffect(); //on
+        toggleTouchEffect(true); //on
         OpenningAnimation = GameObject.FindGameObjectWithTag("Opening").GetComponent<Animator>();
 
     }
 
-    public void GameStart()
+    void toggleGameStartTransition()
     {
+
+        if (GameStartTransition.GetBool(TagManager.GameStartTransition))
+        {
+
+            GameStartTransition.SetBool(TagManager.GameStartTransition, false);
+            return;
+        }
+
+        GameStartTransition.SetBool(TagManager.GameStartTransition, true);
+
+    }
+
+    IEnumerator LoadGame()
+    {
+
         // using IF for Preventing multiple player to spawning
         if (GameObject.FindGameObjectsWithTag(TagManager.PLAYER_TAG).Length == 0)
         {
@@ -83,18 +101,37 @@ public class UiController : MonoBehaviour
             if (isFirst)
             {
                 restoreCullingMaskOnUICamera();
-                playerSpawner.spanwPlayer();
-                gameStarted();
                 StarScrollingParticleEffect.Play();
-                animator.SetBool("Start", true);
-                toggleTouchEffect(); // off  
+                toggleTouchEffect(false); // off  
                 isFirst = false;
-                return;
 
+                // true or false both start the transition
+                toggleGameStartTransition();
+                yield return new WaitForSeconds(.4f);
+                MainMenuAnimator.SetBool("Start", true);
+
+                // spawning player
+                playerSpawner.spanwPlayer();
+                // spawning first ring
+                gameStarted();
+
+                yield return null;
+            }
+            else
+            {
+
+                toggleGameStartTransition();
+                yield return new WaitForSecondsRealtime(.4f);
+                restart();
             }
 
-            restart();
         }
+
+    }
+    public void GameStart()
+    {
+
+        StartCoroutine(LoadGame());
 
     }
 
@@ -103,13 +140,13 @@ public class UiController : MonoBehaviour
     {
         StarScrollingParticleEffect.Pause();
 
-        yield return new WaitForSeconds(.8f);
+        yield return new WaitForSeconds(1f);
 
 
         GameoverAnimator.SetBool("opening", true);
         GameoverAnimator.SetBool("closing", false);
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         changingCameraCullingMask();
 
 
@@ -120,22 +157,24 @@ public class UiController : MonoBehaviour
 
     public void GameOver()
     {
+
+        toggleTouchEffect(false);
         StartCoroutine(PlayerDeadScreenAnimationWithDelay());
         ScoreText.text = score.Score.ToString();
-        Destroy(GameObject.FindGameObjectWithTag(TagManager.BLACK_HOLE_TAG), 2f);
+        Destroy(GameObject.FindGameObjectWithTag(TagManager.BLACK_HOLE_TAG), 3f);
 
 
     }
 
-    IEnumerator loadExit(){
-        OpenningAnimation.SetBool(TagManager.opening_animation_tag,false);
+    IEnumerator loadExit()
+    {
+        OpenningAnimation.SetBool(TagManager.opening_animation_tag, false);
         yield return new WaitForSeconds(.9f);
-        print("exit");
         Application.Quit();
     }
 
     public void exit()
-    {   
+    {
 
         StartCoroutine(loadExit());
 
@@ -161,36 +200,25 @@ public class UiController : MonoBehaviour
             DifficultyIncreaser.ringShrikeSpeed = 0.8f;
             restoreCullingMaskOnUICamera();
             StarScrollingParticleEffect.Play();
+            toggleTouchEffect(false);
 
             if (!isFirst)
             {
-                animator.SetBool("Start", true);
+                MainMenuAnimator.SetBool("Start", true);
             }
         }
 
 
     }
 
-    void toggleTouchEffect()
+    void toggleTouchEffect(bool status)
     {
-        if (!mainMenuTouch.enabled)
-        {
+        mainMenuTouch.enabled = status;
 
-            // Toggling touch effects when game play is running (On)
-            mainMenuTouch.enabled = true;
-            return;
-
-        }
-
-        // Toggling touch effects when game play is running (Off)
-        mainMenuTouch.enabled = false;
     }
 
     void changingCameraCullingMask()
     {
-
-
-        // UI_Camera.cullingMask = (1 << LayerMask.NameToLayer("Default") | LayerMask.GetMask("UI"));
         UI_Camera.cullingMask = LayerMask.GetMask("UI", "Default");
 
     }
@@ -205,28 +233,31 @@ public class UiController : MonoBehaviour
 
     IEnumerator MainMenuAnimation()
     {
-
-        animator.SetBool("Start", false);
+        toggleGameStartTransition();
+        yield return new WaitForSeconds(.4f);
+        MainMenuAnimator.SetBool("Start", false);
 
         yield return new WaitForSeconds(.65f);
         GameoverAnimator.SetBool("opening", false);
         GameoverAnimator.SetBool("closing", true);
-        toggleTouchEffect(); //On
+        toggleTouchEffect(true); //On
     }
 
-    IEnumerator AboutSceneLoad(){
-        OpenningAnimation.SetBool(TagManager.opening_animation_tag,false);
-        yield return new WaitForSeconds(1.5f);
+    IEnumerator AboutSceneLoad()
+    {
+        OpenningAnimation.SetBool(TagManager.opening_animation_tag, false);
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("About");
 
 
 
     }
 
-    IEnumerator SettingSceneLoad(){
+    IEnumerator SettingSceneLoad()
+    {
 
-        OpenningAnimation.SetBool(TagManager.opening_animation_tag,false);
-        yield return new WaitForSeconds(1f);
+        OpenningAnimation.SetBool(TagManager.opening_animation_tag, false);
+        yield return new WaitForSeconds(.5f);
         SceneManager.LoadScene("Settings");
     }
 
@@ -236,14 +267,16 @@ public class UiController : MonoBehaviour
     }
 
 
-    public void about(){
+    public void about()
+    {
 
         StartCoroutine(AboutSceneLoad());
 
 
     }
 
-    public void Setting(){
+    public void Setting()
+    {
 
         StartCoroutine(SettingSceneLoad());
 

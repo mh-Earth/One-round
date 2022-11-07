@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RingRotateSpeed: 0.3
-  maxShrikeSpeed: 1.8
+  maxShrikeSpeed: 1.5
 --- !u!50 &7221542299838104869
 Rigidbody2D:
   serializedVersion: 4

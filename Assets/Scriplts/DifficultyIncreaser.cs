@@ -7,7 +7,7 @@ public class DifficultyIncreaser : MonoBehaviour
 {
 
 
-    private float timeGapForSpeedUp = 8f;
+    private float timeGapForSpeedUp = 10f;
 
     [SerializeField]
     private float maxPlayerSpeed = 120;
@@ -42,10 +42,10 @@ public class DifficultyIncreaser : MonoBehaviour
             if (PlayerController.playerSpeed <= maxPlayerSpeed)
             {
 
-                PlayerController.playerSpeed += 2f;
+                PlayerController.playerSpeed += .5f;
             }
 
-            yield return new WaitForSeconds(timeGapForSpeedUp);
+            yield return new WaitForSecondsRealtime(timeGapForSpeedUp);
 
             if(PlayerController.playerSpeed >= maxPlayerSpeed){
 

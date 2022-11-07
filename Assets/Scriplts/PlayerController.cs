@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player Movements")]
     public static float playerSpeed;
-    private float rotateAngel = 180f;
+    private float rotateAngel = 10;
+    [SerializeField]
+    private float idleSpeed;
     // [SerializeField][Range(0f,1.5f)]
     // private float playerSmoothing = 0.5f;
     // private float currentSpeed;
@@ -23,6 +25,8 @@ public class PlayerController : MonoBehaviour
     [Header("Player Hitting Actions")]
     [SerializeField]
     private SpriteRenderer playerSprite;
+    // activating and disabling player trail effect
+    private TrailRenderer playerTrailEffect;
     // [SerializeField]
     // private  ParticleSystem[] playerTailPartials;
     [SerializeField]
@@ -68,6 +72,9 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         // yield return new WaitForSeconds(.1f);
         transform.localScale = playerSpawnSize;
+        // Active player trail on spawn;
+        playerTrailEffect.enabled = true;
+        rotateAngel = 10;
 
 
     }
@@ -86,6 +93,10 @@ public class PlayerController : MonoBehaviour
         fetchSettings();
         StartCoroutine(spawningPlayer());
         playerSpeed = 90f;
+        playerTrailEffect = this.gameObject.GetComponent<TrailRenderer>();
+        // Disable by starting
+        playerTrailEffect.enabled = false;
+
     }
 
 
@@ -102,13 +113,18 @@ public class PlayerController : MonoBehaviour
             {
                 Touch touch = Input.GetTouch(0);
                 Vector3 touchPoint = Camera.main.ScreenToWorldPoint(touch.position);
+                
                 if(touchPoint.x >= 0){
-                    // playerSpeed = Mathf.SmoothDamp(currentSpeed,180f,ref currentSpeedVelocity,playerSmoothing);
                     rotateAngel = playerSpeed;
+                    idleSpeed = Mathf.Abs(idleSpeed);
+                    print(idleSpeed);
+
+
                 }
                 if(touchPoint.x < 0){
 
                     rotateAngel = -playerSpeed;
+                    idleSpeed = Mathf.Abs(idleSpeed) * -1;
                 }
 
 
@@ -117,8 +133,8 @@ public class PlayerController : MonoBehaviour
 
             if (Input.touchCount < 1)
             {
-                // rotateAngel = getRandomSpeed();
-                rotateAngel = 0;
+
+                rotateAngel = idleSpeed;
 
 
             }
@@ -152,6 +168,8 @@ public class PlayerController : MonoBehaviour
         playerSpeed = 0f;
         rings.shrikeSpeed = 0;
         playerSprite.sprite = null;
+        // On player hit remove player trail
+        playerTrailEffect.enabled = false;
 
         destroyParticals.Play();
 

@@ -10,7 +10,7 @@ public class rings : MonoBehaviour
     public static float shrikeSpeed;
 
     [SerializeField]
-    private float maxShrikeSpeed = 1.8f;
+    private float maxShrikeSpeed = 1.5f;
     // [SerializeField]
     // private SpriteRenderer spriteRenderer;
     // private float alpha = 255f;
