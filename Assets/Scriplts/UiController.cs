@@ -33,6 +33,9 @@ public class UiController : MonoBehaviour
     private Animator OpenningAnimation;
     [SerializeField]
     private Animator GameStartTransition;
+    [SerializeField]
+    private Animator UiRings;
+
 
     /////////////////////////////
     private bool isFirst = true;
@@ -91,8 +94,11 @@ public class UiController : MonoBehaviour
 
     }
 
+
+
     IEnumerator LoadGame()
     {
+
 
         // using IF for Preventing multiple player to spawning
         if (GameObject.FindGameObjectsWithTag(TagManager.PLAYER_TAG).Length == 0)
@@ -106,9 +112,12 @@ public class UiController : MonoBehaviour
                 isFirst = false;
 
                 // true or false both start the transition
+
                 toggleGameStartTransition();
+                UiRings.SetBool("Zoom",true);
                 yield return new WaitForSeconds(.4f);
                 MainMenuAnimator.SetBool("Start", true);
+                yield return new WaitForSeconds(.1f);
 
                 // spawning player
                 playerSpawner.spanwPlayer();
@@ -121,8 +130,11 @@ public class UiController : MonoBehaviour
             {
 
                 toggleGameStartTransition();
+                UiRings.SetBool("Zoom",true);
                 yield return new WaitForSecondsRealtime(.4f);
                 restart();
+                yield return new WaitForSecondsRealtime(2f);
+                UiRings.SetBool("Zoom",false);
             }
 
         }
@@ -138,6 +150,8 @@ public class UiController : MonoBehaviour
 
     IEnumerator PlayerDeadScreenAnimationWithDelay()
     {
+
+
         StarScrollingParticleEffect.Pause();
 
         yield return new WaitForSeconds(1f);
@@ -234,7 +248,11 @@ public class UiController : MonoBehaviour
     IEnumerator MainMenuAnimation()
     {
         toggleGameStartTransition();
+        StarScrollingParticleEffect.Play();
+        yield return new WaitForSeconds(.1f);
+        UiRings.SetBool("Zoom",false);
         yield return new WaitForSeconds(.4f);
+
         MainMenuAnimator.SetBool("Start", false);
 
         yield return new WaitForSeconds(.65f);
@@ -261,6 +279,15 @@ public class UiController : MonoBehaviour
         SceneManager.LoadScene("Settings");
     }
 
+    IEnumerator loadHighScoreScene(){
+
+        OpenningAnimation.SetBool(TagManager.opening_animation_tag, false);
+        yield return new WaitForSeconds(.5f);
+        SceneManager.LoadScene("High Score");
+
+
+    }
+
     public void MainMenu()
     {
         StartCoroutine(MainMenuAnimation());
@@ -271,14 +298,20 @@ public class UiController : MonoBehaviour
     {
 
         StartCoroutine(AboutSceneLoad());
-
-
     }
+
+
 
     public void Setting()
     {
 
         StartCoroutine(SettingSceneLoad());
+
+    }
+
+    public void HighScore(){
+
+        StartCoroutine(loadHighScoreScene());
 
     }
 

@@ -11,9 +11,11 @@ public class score : MonoBehaviour
 
     public delegate void isScoreUp();
     public static isScoreUp ScoreUp;
+    private int HighScore;
 
     private void Start() {
         mash = scoreText.GetComponent<TMPro.TextMeshProUGUI>();
+        HighScore = PlayerPrefs.GetInt("highScore",0);
     }
 
     private void LateUpdate() {
@@ -27,6 +29,13 @@ public class score : MonoBehaviour
 
             Score += 1;
             ScoreUp();
+
+            if(Score > HighScore){
+
+                PlayerPrefs.SetInt("highScore",Score);
+
+
+            }
 
             
         }

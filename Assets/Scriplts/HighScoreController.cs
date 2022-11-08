@@ -1,17 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-
 public class HighScoreController : MonoBehaviour
 {
 
     // private 
+
+    [SerializeField]
+    private TMPro.TextMeshProUGUI ScoreText;
 
 
     private Animator animator;
 
     private void Start() {
         
+        ScoreText.text = PlayerPrefs.GetInt("highScore").ToString();
         animator = GameObject.FindGameObjectWithTag("Opening").GetComponent<Animator>();
 
     }
